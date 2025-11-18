@@ -166,6 +166,16 @@ Enable debug logs to stderr:
 }
 ```
 
+## Restart Server
+
+After changing configuration in `~/.polybrain.yaml`, restart the HTTP backend server:
+
+```bash
+polybrain --restart
+```
+
+This kills the background HTTP server. The next time you use polybrain, it will automatically start a fresh server with the updated configuration.
+
 ## License
 
 MIT

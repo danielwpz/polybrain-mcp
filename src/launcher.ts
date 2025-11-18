@@ -131,4 +131,42 @@ export class ServerLauncher {
       this.serverProcess.kill();
     }
   }
+
+  /**
+   * Kill any server running on the configured port using lsof
+   */
+  async killServerByPort(): Promise<void> {
+    try {
+      debugLog("debug", "Attempting to kill server on port", { port: this.port });
+
+      // Use lsof to find the PID listening on the port
+      const { execSync } = await import("node:child_process");
+      try {
+        const result = execSync(`lsof -i :${this.port} -t`, { encoding: "utf-8" }).trim();
+
+        if (result) {
+          const pids = result.split("\n").filter((pid) => pid.length > 0);
+          for (const pid of pids) {
+            try {
+              execSync(`kill -9 ${pid}`);
+              debugLog("info", "Killed server process", { pid, port: this.port });
+            } catch (e) {
+              debugLog("debug", "Failed to kill process", { pid, error: String(e) });
+            }
+          }
+        } else {
+          debugLog("debug", "No process found on port", { port: this.port });
+        }
+      } catch (e) {
+        // lsof command failed or no process found - that's fine
+        debugLog("debug", "lsof command failed or no process on port", { port: this.port });
+      }
+    } catch (error) {
+      debugLog(
+        "warn",
+        "Error killing server",
+        error instanceof Error ? error : new Error(String(error))
+      );
+    }
+  }
 }

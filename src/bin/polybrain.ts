@@ -24,6 +24,26 @@ function debugLog(
 }
 
 async function main(): Promise<void> {
+  // Check for --restart flag
+  if (process.argv[2] === "--restart") {
+    try {
+      if (process.env.POLYBRAIN_DEBUG !== "true") {
+        setLogLevel("error");
+      }
+
+      const config = loadConfig();
+      const launcher = new ServerLauncher(config.httpPort);
+      await launcher.killServerByPort();
+
+      console.log("✓ Server restarted successfully");
+      process.exit(0);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(`Error during restart: ${errorMessage}`);
+      process.exit(1);
+    }
+  }
+
   try {
     // In stdio mode, suppress all logging by default to keep stdout pure for MCP protocol
     // Only enable logging if POLYBRAIN_DEBUG is explicitly set
@@ -70,11 +90,26 @@ async function main(): Promise<void> {
     debugLog("debug", "MCP server connected via stdio");
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
-    debugLog(
-      "error",
-      "Failed to start MCP server",
-      error instanceof Error ? error : new Error(errorMessage)
-    );
+
+    // Check if this is a critical config error - always show these regardless of debug mode
+    const isConfigError =
+      errorMessage.includes("No configuration found") ||
+      errorMessage.includes("Failed to load config") ||
+      errorMessage.includes("Environment variable not found") ||
+      errorMessage.includes("Model must have");
+
+    if (isConfigError) {
+      // Critical errors: always print to console.error, regardless of debug mode
+      console.error(`Error: ${errorMessage}`);
+    } else {
+      // Non-critical errors: use debugLog
+      debugLog(
+        "error",
+        "Failed to start MCP server",
+        error instanceof Error ? error : new Error(errorMessage)
+      );
+    }
+
     // Exit with error code - agent will handle the connection failure
     process.exit(1);
   }
