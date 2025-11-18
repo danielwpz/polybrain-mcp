@@ -83,7 +83,7 @@ export function registerTools(
           actualConversationId = conversationManager.createConversation(actualModelId);
         }
 
-        // Validate model exists
+        // Validate model exists and get its full model name
         const client = openaiClients.get(actualModelId);
         if (!client) {
           return {
@@ -96,14 +96,27 @@ export function registerTools(
           };
         }
 
+        // Get the full model name from config for API calls
+        const modelConfig = config.models.find((m) => m.id === actualModelId);
+        if (!modelConfig) {
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: `Error: Model configuration not found: ${actualModelId}`,
+              },
+            ],
+          };
+        }
+
         // Add user message to conversation
         conversationManager.addMessage(actualConversationId, "user", message);
 
         // Get conversation history
         const history = conversationManager.getHistory(actualConversationId);
 
-        // Send to OpenAI
-        const response = await client.chat(actualModelId, history, {
+        // Send to OpenAI - use the full modelName for the API call
+        const response = await client.chat(modelConfig.modelName, history, {
           reasoning,
         });
 
