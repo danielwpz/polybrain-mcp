@@ -208,6 +208,22 @@ POLYBRAIN_HTTP_PORT=3001 pnpm start
 POLYBRAIN_LOG_LEVEL=debug pnpm start | grep -i config
 ```
 
+## Restarting the Server
+
+After making changes (code, config, tool descriptions, etc.), restart with:
+
+```bash
+polybrain --restart
+```
+
+This kills the background HTTP server. The next time you use polybrain, it automatically starts a fresh server with the updated configuration/code.
+
+**When to restart:**
+- After editing `~/.polybrain.yaml` config
+- After rebuilding code (`pnpm build`)
+- After updating MCP tool descriptions
+- When configuration env vars change
+
 ## Recent Changes (End-to-End Fix)
 
 The server was recently fixed to properly return responses to HTTP clients by:
