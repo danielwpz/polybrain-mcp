@@ -17,30 +17,26 @@ export function registerTools(
     {
       title: "Chat with Another LLM Model",
       description:
-        "Send a message to one of the available LLM models. Use this when you need help from another model, want a second opinion on a problem, or need to discuss ideas with a different AI. Can start a new conversation, continue an existing one, or switch to a different model mid-conversation.",
+        'Send a message to an available LLM for help, second opinions, or brainstorming; start new conversations, continue existing ones, or switch models mid-chat.\n\nExample workflow:\n1. chat(message: "hello", modelId: "gpt-5-mini") → conversationId: "abc1"\n2. chat(message: "follow-up", conversationId: "abc1") → conversationId: "abc1" (continues)\n3. chat(message: "same question", conversationId: "abc1", modelId: "deepseek-r1") → conversationId: "xyz9" (cloned with new model)',
       inputSchema: z.object({
-        message: z
-          .string()
-          .describe(
-            "Your question or message to send to the other model. Be clear and specific about what you need help with."
-          ),
+        message: z.string().describe("The question or request to send—be clear and specific."),
         conversationId: z
           .string()
           .optional()
           .describe(
-            "ID of existing conversation to continue with this model. Leave empty to start a new conversation. Save the conversationId from previous responses to continue discussing the same topic."
+            "ID of the conversation to continue; omit to start a new one. Use the conversationId from prior responses to keep discussing the same topic."
           ),
         modelId: z
           .string()
           .optional()
           .describe(
-            "ID of model to use (call list_models to see available options). Use the default model if not specified. To switch models mid-conversation: pass a different modelId with your existing conversationId - you'll get a new conversationId with the conversation cloned to the new model."
+            "ID of model to use (call list_models); omitted = default model. To switch models, pass a different modelId with your conversationId — you'll get a new conversationId with the conversation cloned to the new model."
           ),
         reasoning: z
           .boolean()
           .optional()
           .describe(
-            "Set to true to ask the model to show its thinking process. Useful for complex problems where you want to understand HOW it got the answer, not just the answer itself."
+            "Set true to have the model show its reasoning steps, useful for complex problems."
           ),
       }),
     },
