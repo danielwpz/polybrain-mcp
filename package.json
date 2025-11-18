@@ -1,0 +1,57 @@
+{
+  "name": "polybrain-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for connecting to multiple LLM models with conversation history management",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "polybrain": "dist/bin/polybrain.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup src/index.ts src/bin/polybrain.ts --format esm --outDir dist",
+    "start": "POLYBRAIN_HTTP_SERVER_ONLY=true tsx src/index.ts",
+    "lint": "biome check src",
+    "format": "biome format src --write",
+    "type-check": "tsc --noEmit",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "llm",
+    "openai",
+    "conversation-management"
+  ],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.0",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.22.0",
+    "@types/express": "^5.0.5",
+    "@types/js-yaml": "^4.0.9",
+    "express": "^5.1.0",
+    "hono": "^4.10.6",
+    "js-yaml": "^4.1.1",
+    "openai": "^4.104.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.3",
+    "@types/node": "^22.10.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.1",
+    "typescript": "^5.7.2"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "pnpm build",
+      "pnpm lint"
+    ]
+  }
+}
