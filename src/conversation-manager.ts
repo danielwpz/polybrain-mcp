@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import { logger } from "./logger.js";
 import type { ChatMessage, ConversationState } from "./types.js";
 
@@ -14,7 +14,8 @@ export class ConversationManager {
    * Create a new conversation or get existing one
    */
   createConversation(modelId: string): string {
-    const conversationId = randomUUID();
+    // Generate a short 4-character hex ID (16 bits = 65536 possible values)
+    const conversationId = randomBytes(2).toString("hex");
     const conversation: ConversationState = {
       id: conversationId,
       modelId,
