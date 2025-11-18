@@ -15,14 +15,33 @@ export function registerTools(
   server.registerTool(
     "chat",
     {
-      title: "Chat with LLM",
+      title: "Chat with Another LLM Model",
       description:
-        "Send a message to an LLM model. Can create new conversation, continue existing one, or clone to new model.",
+        "Send a message to one of the available LLM models. Use this when you need help from another model, want a second opinion on a problem, or need to discuss ideas with a different AI. Can start a new conversation, continue an existing one, or switch to a different model mid-conversation.",
       inputSchema: z.object({
-        message: z.string().describe("The message to send"),
-        conversationId: z.string().optional().describe("ID of existing conversation to continue"),
-        modelId: z.string().optional().describe("ID of model to use"),
-        reasoning: z.boolean().optional().describe("Whether to include reasoning"),
+        message: z
+          .string()
+          .describe(
+            "Your question or message to send to the other model. Be clear and specific about what you need help with."
+          ),
+        conversationId: z
+          .string()
+          .optional()
+          .describe(
+            "ID of existing conversation to continue with this model. Leave empty to start a new conversation. Save the conversationId from previous responses to continue discussing the same topic."
+          ),
+        modelId: z
+          .string()
+          .optional()
+          .describe(
+            "ID of model to use (call list_models to see available options). Use the default model if not specified. To switch models mid-conversation: pass a different modelId with your existing conversationId - you'll get a new conversationId with the conversation cloned to the new model."
+          ),
+        reasoning: z
+          .boolean()
+          .optional()
+          .describe(
+            "Set to true to ask the model to show its thinking process. Useful for complex problems where you want to understand HOW it got the answer, not just the answer itself."
+          ),
       }),
     },
     async ({ message, conversationId, modelId, reasoning }) => {
@@ -129,8 +148,9 @@ export function registerTools(
   server.registerTool(
     "list_models",
     {
-      title: "List Available Models",
-      description: "Get list of all available LLM models",
+      title: "See Available Models to Talk To",
+      description:
+        "Get all the models you can chat with. Each model has different strengths and expertise. Call this first to see which model is best for your question, or to find a specific model ID to use in the chat tool.",
       inputSchema: z.object({}),
     },
     async () => {
@@ -176,11 +196,15 @@ export function registerTools(
   server.registerTool(
     "conversation_history",
     {
-      title: "Get Conversation History",
+      title: "Review Your Conversation with Another Model",
       description:
-        "Get the message history of a conversation. Long messages are truncated to save context.",
+        "See what you've already discussed with a specific model. Useful for understanding context before continuing a conversation, reviewing advice you got, or checking previous responses. Long conversations are automatically shortened to save context.",
       inputSchema: z.object({
-        conversationId: z.string().describe("ID of conversation"),
+        conversationId: z
+          .string()
+          .describe(
+            "The ID of the conversation you want to review. Get this from the response of the chat tool when you first talk to a model."
+          ),
       }),
     },
     async ({ conversationId }) => {
