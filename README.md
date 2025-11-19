@@ -4,9 +4,10 @@ An MCP (Model Context Protocol) server for connecting AI agents to multiple LLM 
 
 ## Features
 
-- Multi-model support (OpenAI, Claude, custom endpoints)
+- Multi-model support (OpenAI, OpenRouter, custom endpoints)
 - Conversation history management
 - Switch models mid-conversation
+- Extended thinking/reasoning support (configurable by provider)
 - Pure MCP protocol (silent by default)
 - Automatic server management
 
@@ -31,11 +32,13 @@ models:
     modelName: "gpt-4o"
     baseUrl: "https://api.openai.com/v1"
     apiKey: "${OPENAI_API_KEY}"
+    provider: "openai"
 
-  - id: "claude"
-    modelName: "claude-3-5-sonnet-20241022"
+  - id: "gpt-5.1"
+    modelName: "openai/gpt-5.1"
     baseUrl: "https://openrouter.io/api/v1"
     apiKey: "${OPENROUTER_KEY}"
+    provider: "openrouter"
 ```
 
 Set env vars:
@@ -95,7 +98,40 @@ models:                             # Required
     modelName: "actual-model-name"  # API model name
     baseUrl: "https://api.url/v1"  # API endpoint
     apiKey: "key or ${ENV_VAR}"    # API key
+    provider: "openai"              # Optional: provider type for reasoning support
 ```
+
+### Supported Providers
+
+The `provider` field enables provider-specific features like extended thinking/reasoning. If not specified, reasoning parameters will not be passed to the API (safe default).
+
+| Provider | Reasoning Support | Valid Values |
+|----------|-------------------|--------------|
+| OpenAI | YES | `"openai"` |
+| OpenRouter | VARIES | `"openrouter"` |
+
+**Examples:**
+- Use `provider: "openai"` for OpenAI API models (GPT-4, o-series)
+- Use `provider: "openrouter"` for OpenRouter proxy service (supports 400+ models)
+- Omit `provider` field if your endpoint doesn't support reasoning parameters
+
+**Example with reasoning:**
+```yaml
+models:
+  - id: "gpt-o1"
+    modelName: "o1"
+    baseUrl: "https://api.openai.com/v1"
+    apiKey: "${OPENAI_API_KEY}"
+    provider: "openai"           # Enables reasoning support
+
+  - id: "gpt-5.1"
+    modelName: "openai/gpt-5.1"
+    baseUrl: "https://openrouter.io/api/v1"
+    apiKey: "${OPENROUTER_KEY}"
+    provider: "openrouter"       # Enables reasoning support
+```
+
+To use reasoning, set `reasoning: true` in the chat tool call. If the model and provider support it, you'll receive both the response and reasoning content.
 
 ## Development
 

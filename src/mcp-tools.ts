@@ -114,6 +114,7 @@ export function registerTools(
         // Send to OpenAI - use the full modelName for the API call
         const response = await client.chat(modelConfig.modelName, history, {
           reasoning,
+          provider: modelConfig.provider,
         });
 
         // Add assistant response to conversation

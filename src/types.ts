@@ -1,8 +1,11 @@
+export type ProviderType = "openai" | "openrouter";
+
 export interface ModelConfig {
   id: string;
   modelName: string;
   baseUrl: string;
   apiKey: string;
+  provider?: ProviderType;
 }
 
 export interface ServerConfig {

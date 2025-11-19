@@ -4,6 +4,7 @@ import type { ChatMessage } from "./types.js";
 
 export interface ChatOptions {
   reasoning?: boolean;
+  provider?: "openai" | "openrouter";
 }
 
 export class OpenAIClient {
@@ -13,6 +14,54 @@ export class OpenAIClient {
   constructor(apiKey: string, baseUrl = "https://api.openai.com/v1") {
     this.apiKey = apiKey;
     this.baseUrl = baseUrl;
+  }
+
+  /**
+   * Build provider-specific reasoning parameters
+   */
+  private buildReasoningParams(
+    provider: string | undefined,
+    enabled: boolean
+  ): Record<string, unknown> {
+    if (!enabled || !provider) {
+      return {};
+    }
+
+    switch (provider) {
+      case "openai":
+        return { reasoning: { enabled: true } };
+      case "openrouter":
+        // OpenRouter reasoning support varies by model
+        // Many models don't support reasoning parameters, so return empty
+        // User should check OpenRouter docs for specific model support
+        logger.debug("Reasoning requested for OpenRouter model - not all models support this");
+        return {};
+      default:
+        return {};
+    }
+  }
+
+  /**
+   * Extract reasoning from various response field formats
+   */
+  private extractReasoning(message: Record<string, unknown>): string | undefined {
+    // Try different field names used by different providers
+    const reasoning =
+      (message.reasoning as string | undefined) ||
+      (message.thinking as string | undefined) ||
+      (message.reasoning_content as string | undefined);
+
+    if (reasoning) {
+      return reasoning;
+    }
+
+    // Handle reasoning_details array format
+    const reasoningDetails = message.reasoning_details as Array<{ text: string }> | undefined;
+    if (reasoningDetails && Array.isArray(reasoningDetails) && reasoningDetails.length > 0) {
+      return reasoningDetails.map((block) => block.text).join("\n");
+    }
+
+    return undefined;
   }
 
   /**
@@ -46,10 +95,17 @@ export class OpenAIClient {
       }));
 
       const client = this.getClient();
+
+      // Build provider-specific reasoning params
+      const reasoningParams = this.buildReasoningParams(
+        options?.provider,
+        options?.reasoning ?? false
+      );
+
       const response = await client.chat.completions.create({
         model: modelId,
         messages: openaiMessages,
-        ...(options?.reasoning && { reasoning: "enabled" }),
+        ...reasoningParams,
       });
 
       const textContent = response.choices[0]?.message?.content;
@@ -62,13 +118,10 @@ export class OpenAIClient {
         tokens: response.usage?.total_tokens,
       });
 
-      // Handle reasoning if present in response
+      // Extract reasoning if present and requested
       let reasoning: string | undefined;
-      if (
-        options?.reasoning &&
-        (response.choices[0].message as Record<string, unknown>).reasoning
-      ) {
-        reasoning = String((response.choices[0].message as Record<string, unknown>).reasoning);
+      if (options?.reasoning) {
+        reasoning = this.extractReasoning(response.choices[0].message as Record<string, unknown>);
       }
 
       return {

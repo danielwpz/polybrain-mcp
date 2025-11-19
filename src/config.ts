@@ -136,17 +136,24 @@ function parseYamlConfig(rawConfig: RawConfig): ServerConfig {
     const modelName = m.modelName as string | undefined;
     const baseUrl = m.baseUrl as string | undefined;
     const apiKey = m.apiKey as string | undefined;
+    const provider = m.provider as string | undefined;
 
     if (!id) throw new Error("Model must have 'id' field");
     if (!modelName) throw new Error("Model must have 'modelName' field for API calls");
     if (!baseUrl) throw new Error("Model must have 'baseUrl' field");
     if (!apiKey) throw new Error("Model must have 'apiKey' field");
 
+    // Validate provider if provided
+    if (provider && !["openai", "openrouter"].includes(provider)) {
+      throw new Error(`Invalid provider '${provider}'. Must be 'openai' or 'openrouter'`);
+    }
+
     return {
       id,
       modelName,
       baseUrl,
       apiKey,
+      provider: provider as "openai" | "openrouter" | undefined,
     };
   });
 
