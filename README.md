@@ -55,24 +55,34 @@ export POLYBRAIN_API_KEY="sk-..."
 export POLYBRAIN_MODEL_NAME="gpt-4o"
 ```
 
-### 2. Add to Claude Code
+### 2. Coding Agent Integration
 
-Open Claude Code settings → MCP Servers, add:
+#### Claude Code
 
-```json
-{
-  "mcpServers": {
-    "polybrain": {
-      "command": "polybrain"
-    }
-  }
-}
+Run the following command to add Polybrain to Claude Code:
+
+```bash
+claude mcp add -s user -t stdio polybrain -- polybrain
 ```
 
-Done! You can now use:
-- `chat` - Talk to any configured model
-- `list_models` - See available models
-- `conversation_history` - Access past conversations
+#### OpenAI Codex
+
+Open `~/.codex/config.toml` and add:
+
+```toml
+[mcpServers.polybrain]
+command = "polybrain"
+```
+
+## Usage
+
+You can now ask your coding agent to consult specific models. For example:
+
+> "Ask deepseek what's the best way to install python on mac"
+
+Or:
+
+> "What models are available from polybrain?"
 
 ## Configuration Reference
 
@@ -176,15 +186,6 @@ src/
 ├── logger.ts
 └── types.ts
 ```
-
-## How It Works
-
-1. Launcher checks if HTTP server is running
-2. Starts server in background if needed
-3. Connects to Claude Code via stdio MCP
-4. Routes requests to HTTP backend
-5. Maintains conversation history
-6. Responds with MCP protocol messages
 
 ## Debugging
 

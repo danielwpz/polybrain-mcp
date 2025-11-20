@@ -19,8 +19,7 @@
     "lint": "biome check src",
     "format": "biome format src --write",
     "type-check": "tsc --noEmit",
-    "prepare": "husky",
-    "postinstall": "echo '\\n✨ Polybrain installed!\\n📚 Next steps:\\n  1. Configure models: create ~/.polybrain.yaml (see README)\\n  2. Add to your coding assistant (Claude Code, Codex, etc)\\n  3. Run: polybrain\\n\\n📖 Full instructions: https://github.com/danielwpz/polybrain-mcp#quick-setup\\n'"
+    "prepare": "husky"
   },
   "keywords": [
     "mcp",
