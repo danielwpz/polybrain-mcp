@@ -1,6 +1,6 @@
 {
   "name": "polybrain",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Give your coding agent the ability to invoke other models for help and maintain conversation history across multi-turn interactions",
   "type": "module",
   "main": "dist/index.js",
