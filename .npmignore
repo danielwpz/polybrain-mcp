@@ -1,0 +1,13 @@
+src/
+*.ts
+*.js.map
+tsconfig.json
+.prettierrc
+.eslintrc
+.github/
+.git
+.gitignore
+.husky/
+node_modules/
+.npmrc
+pnpm-lock.yaml

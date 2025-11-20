@@ -1,14 +1,16 @@
 {
-  "name": "polybrain-mcp-server",
-  "version": "1.0.0",
-  "description": "MCP server for connecting to multiple LLM models with conversation history management",
+  "name": "polybrain",
+  "version": "0.1.0",
+  "description": "Give your coding agent the ability to invoke other models for help and maintain conversation history across multi-turn interactions",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
     "polybrain": "dist/bin/polybrain.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "dev": "tsx watch src/index.ts",
@@ -24,10 +26,22 @@
     "model-context-protocol",
     "llm",
     "openai",
-    "conversation-management"
+    "conversation-management",
+    "claude-code",
+    "ai-gateway",
+    "multi-model",
+    "openrouter",
+    "polybrain"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "danielwpz <5139554+danielwpz@users.noreply.github.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielwpz/polybrain-mcp.git"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "packageManager": "pnpm@10.15.0",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.22.0",
