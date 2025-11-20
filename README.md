@@ -14,9 +14,9 @@ An MCP (Model Context Protocol) server for connecting AI agents to multiple LLM 
 ## Installation
 
 ```bash
-npm install -g polybrain-mcp-server
+npm install -g polybrain
 # or
-pnpm add -g polybrain-mcp-server
+pnpm add -g polybrain
 ```
 
 ## Quick Setup
