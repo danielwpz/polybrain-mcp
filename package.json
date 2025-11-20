@@ -40,21 +40,20 @@
     "url": "git+https://github.com/danielwpz/polybrain-mcp.git"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "packageManager": "pnpm@10.15.0",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.22.0",
-    "@types/express": "^5.0.5",
-    "@types/js-yaml": "^4.0.9",
     "express": "^5.1.0",
-    "hono": "^4.10.6",
     "js-yaml": "^4.1.1",
     "openai": "^4.104.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.3",
+    "@types/express": "^5.0.5",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.10.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.6",
