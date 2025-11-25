@@ -19,7 +19,19 @@ function debugLog(
   context?: Record<string, unknown> | Error
 ): void {
   if (process.env.POLYBRAIN_DEBUG === "true") {
-    logger[level](message, context);
+    if (context instanceof Error) {
+      if (level === "error") {
+        logger.error(message, context);
+      } else {
+        logger[level](message, {
+          name: context.name,
+          message: context.message,
+          stack: context.stack,
+        });
+      }
+    } else {
+      logger[level](message, context);
+    }
   }
 }
 

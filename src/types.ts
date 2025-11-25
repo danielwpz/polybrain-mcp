@@ -8,11 +8,13 @@ export interface ModelConfig {
   provider?: ProviderType;
 }
 
+export type LogLevel = "debug" | "info" | "warn" | "error";
+
 export interface ServerConfig {
   models: ModelConfig[];
   truncateLimit?: number;
-  httpPort?: number;
-  logLevel?: "debug" | "info" | "warn" | "error";
+  httpPort: number;
+  logLevel: LogLevel;
 }
 
 export interface ChatMessage {

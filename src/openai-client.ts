@@ -121,7 +121,9 @@ export class OpenAIClient {
       // Extract reasoning if present and requested
       let reasoning: string | undefined;
       if (options?.reasoning) {
-        reasoning = this.extractReasoning(response.choices[0].message as Record<string, unknown>);
+        reasoning = this.extractReasoning(
+          response.choices[0].message as unknown as Record<string, unknown>
+        );
       }
 
       return {

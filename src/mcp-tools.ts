@@ -17,7 +17,7 @@ export function registerTools(
     {
       title: "Chat with Another LLM Model",
       description:
-        'Send a message to an available LLM for help, second opinions, or brainstorming; start new conversations, continue existing ones, or switch models mid-chat.\n\nExample workflow:\n1. chat(message: "hello", modelId: "gpt-5-mini") → conversationId: "abc1"\n2. chat(message: "follow-up", conversationId: "abc1") → conversationId: "abc1" (continues)\n3. chat(message: "same question", conversationId: "abc1", modelId: "deepseek-r1") → conversationId: "xyz9" (cloned with new model)',
+        'Send a message to an available LLM for help, second opinions, or brainstorming; start new conversations, continue existing ones, or switch models mid-chat. In the first message you shall provide as much context as possible, since the model has no idea of the problem.\n\nExample workflow:\n1. chat(message: "hello", modelId: "gpt-5-mini") → conversationId: "abc1"\n2. chat(message: "follow-up", conversationId: "abc1") → conversationId: "abc1" (continues)\n3. chat(message: "same question", conversationId: "abc1", modelId: "deepseek-r1") → conversationId: "xyz9" (cloned with new model)',
       inputSchema: z.object({
         message: z.string().describe("The question or request to send—be clear and specific."),
         conversationId: z
